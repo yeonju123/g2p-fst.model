@@ -39,6 +39,6 @@ if __name__ == "__main__":
         "--p_far_path", required=True, help="output phoneme FAR path"
     )
     parser.add_argument(
-        "--token_type", default="utf8", help="token type for acceptors"
+        "--token_type", default="utf8", help="token type for acceptors. Default = utf8"
     )
     main(parser.parse_args())
