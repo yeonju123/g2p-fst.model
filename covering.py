@@ -50,8 +50,9 @@ def main(args):
     g_set, p_set = _create_container(args.g_far_path, args.p_far_path)
     g_lattice = _make_star(g_set)
     p_lattice = _make_star(p_set)
-    logging.info("Sigma star is built. Now transducer is being constructed.")
+    logging.info("Sigma star is built. Now the covering grammar is being constructed.")
     covering = pynini.transducer(g_lattice, p_lattice)
+    logging.info("g to p covering grammar is built.")
     fst_size = size(covering)
     if args.rmepsilon:
         covering.rmepsilon()
