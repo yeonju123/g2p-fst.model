@@ -34,7 +34,7 @@ def _make_star(labels: Set[int], epsilon: bool) -> pynini.Fst:
     return lattice
 
 
-def size(f: pynini.Fst):
+def size(f: pynini.Fst) -> int:
     """Computes the number of arcs and states in the FST."""
     return sum(1 + f.num_arcs(state) for state in f.states())
 
