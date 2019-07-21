@@ -67,12 +67,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input_epsilon",
         default=True,
-        help="allows input graphemes to have a null alignment (default: %(default)s)",
+        help="allows input graphemes to have a null alignment (default: %(default)s)"
     )
     parser.add_argument(
         "--output_epsilon",
         default=True,
-        help="allows input phonemes to have a null alignment (default: %(default)s)",
+        help="allows input phonemes to have a null alignment (default: %(default)s)"
     )
     parser.add_argument(
         "--covering_path", required=True, help="output covering FAR path"
