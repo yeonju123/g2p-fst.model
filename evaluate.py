@@ -58,7 +58,7 @@ def _tsv_reader(path: str) -> Iterator[Tuple[str, str]]:
             yield (gold, hypo)
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     # Word-level measures.
     correct = 0
     incorrect = 0
@@ -81,9 +81,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO, format="%(levelname)s: %(message)s"
-    )
+    logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("tsv_path", help="Path to gold/hypo TSV file")
     main(parser.parse_args())

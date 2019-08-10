@@ -10,7 +10,7 @@ import logging
 import random
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     # Reads in data and shuffles.
     with open(args.input_path, "r") as source:
         data = [line.rstrip() for line in source]
@@ -38,9 +38,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO, format="%(levelname)s: %(message)s"
-    )
+    logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--seed",

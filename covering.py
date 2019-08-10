@@ -4,8 +4,11 @@
 
 import argparse
 import logging
-import pynini
+
 from typing import Set
+
+
+import pynini
 
 
 def _get_labels(far_path: str) -> Set[int]:
@@ -30,7 +33,7 @@ def _make_star(labels: Set[int], epsilon: bool) -> pynini.Fst:
         lattice.add_arc(
             starting_state, pynini.Arc(label, label, None, starting_state)
         )
-    assert lattice.verify()
+    assert lattice.verify(), "FST is ill-formed"
     return lattice
 
 
@@ -39,24 +42,20 @@ def size(f: pynini.Fst) -> int:
     return sum(1 + f.num_arcs(state) for state in f.states())
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     g_labels = _get_labels(args.g_far_path)
     p_labels = _get_labels(args.p_far_path)
     g_lattice = _make_star(g_labels, args.input_epsilon)
     p_lattice = _make_star(p_labels, args.output_epsilon)
     covering = pynini.transducer(g_lattice, p_lattice)
-    assert covering.verify()
+    assert covering.verify(), "FST is ill-formed"
     fst_size = size(covering)
-    logging.info(
-        "The number of arcs and states in the covering grammar is %d", fst_size
-    )
+    logging.info("%d states and arcs", fst_size)
     covering.write(args.covering_path)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO, format="%(levelname)s: %(message)s"
-    )
+    logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--g_far_path", required=True, help="input grapheme FAR path"
@@ -67,12 +66,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input_epsilon",
         default=True,
-        help="allows input graphemes to have a null alignment (default: %(default)s)"
+        help="allows input graphemes to have a null alignment (default: %(default)s)",
     )
     parser.add_argument(
         "--output_epsilon",
         default=True,
-        help="allows input phonemes to have a null alignment (default: %(default)s)"
+        help="allows input phonemes to have a null alignment (default: %(default)s)",
     )
     parser.add_argument(
         "--covering_path", required=True, help="output covering FAR path"
