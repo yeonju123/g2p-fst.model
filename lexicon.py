@@ -4,11 +4,12 @@
 
 import argparse
 import logging
+
 import pynini
 import pywrapfst as fst
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     with open(args.input_path, "r") as source:
         g_writer = fst.FarWriter.create(args.g_far_path)
         p_writer = fst.FarWriter.create(args.p_far_path)
@@ -21,13 +22,11 @@ def main(args):
             p_acceptor = pynini.acceptor(p, token_type=args.token_type)
             p_compact = fst.convert(p_acceptor, "compact_string")
             p_writer[key] = p_compact
-        logging.info("Processed g and p pairs:\t%d pairs", linenum)
+        logging.info("Processed %d g/p pairs", linenum)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO, format="%(levelname)s: %(message)s"
-    )
+    logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--input_path", required=True, help="input TSV file path"
@@ -39,6 +38,8 @@ if __name__ == "__main__":
         "--p_far_path", required=True, help="output phoneme FAR path"
     )
     parser.add_argument(
-        "--token_type", default="utf8", help="token type for acceptors. (default: %(default)s)"
+        "--token_type",
+        default="utf8",
+        help="token type for acceptors. (default: %(default)s)",
     )
     main(parser.parse_args())
