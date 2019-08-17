@@ -4,13 +4,10 @@
 
 import argparse
 import logging
+import os
 import pynini
 import subprocess
 import typing
-import os
-
-
-# remove all not required files.
 
 
 def main(args: argparse.Namespace) -> None:
@@ -100,5 +97,8 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--smoothing", required=True, help="input smoothing method"
+    )
+    parser.add_argument(
+        "--ngramshrink", default=False, help="make a compact ngram model"
     )
     main(parser.parse_args())
