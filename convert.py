@@ -99,6 +99,6 @@ if __name__ == "__main__":
         "--smoothing", required=True, help="input smoothing method"
     )
     parser.add_argument(
-        "--ngramshrink", default=False, help="make a compact ngram model"
+        "--ngramshrink", action="store_true", help="make a compact ngram model"
     )
     main(parser.parse_args())
