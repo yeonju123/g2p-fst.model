@@ -77,8 +77,9 @@ def main(args: argparse.Namespace) -> None:
                     fst_key += 1
     os.remove("ngramdata.far")
     os.remove("lm.cnt")
+    os.remove("model.lm")
     if args.ngramshrink:
-        os.remove("model.lm")
+        os.remove("model.shrunk.lm")
 
 # write a function to delete all the temporal files. -> delet lm.cnt. and if ngramshrink, delete model.lm
 
