@@ -45,13 +45,13 @@ def main(args: argparse.Namespace) -> None:
             tmppath_cnt,
         ]
         subprocess.check_call(cmd)
-        cmd1 = [
+        cmd = [
             "ngrammake",
             f"--method={args.smoothing}",
             tmppath_cnt,
             tmppath_lm,
         ]
-        subprocess.check_call(cmd1)
+        subprocess.check_call(cmd)
         if args.ngramshrink:
             _, tmppath_lm_sh = tempfile.mkstemp(text=True)
             cmd = [
