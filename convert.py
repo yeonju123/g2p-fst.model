@@ -35,7 +35,8 @@ def main(args: argparse.Namespace) -> None:
         _, tmppath_cnt = tempfile.mkstemp(text=True)
         _, tmppath_lm = tempfile.mkstemp(text=True)
         logging.info(
-            "alignment.far is encoded to FSAs for training. Now training starts." )
+            "alignment.far is encoded to FSAs for training. Now training starts."
+        )
         cmd = [
             "ngramcount",
             "--require_symbols=false",
@@ -85,8 +86,9 @@ def main(args: argparse.Namespace) -> None:
     os.remove(tmppath_cnt)
     os.remove(tmppath_lm)
     logging.info(
-            "%s-gram %s Language model is built.", args.ngram, args.smoothing
-        )
+        "%s-gram %s Language model is built.", args.ngram, args.smoothing
+    )
+
 
 if __name__ == "__main__":
     logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
@@ -101,7 +103,9 @@ if __name__ == "__main__":
         "--ngram", required=True, help="input the order of ngram"
     )
     parser.add_argument(
-        "--smoothing", default="kneser_ney", help="input smoothing method (default: %(default)s)"
+        "--smoothing",
+        default="kneser_ney",
+        help="input smoothing method (default: %(default)s)",
     )
     parser.add_argument(
         "--ngramshrink", action="store_true", help="make a compact ngram model"
