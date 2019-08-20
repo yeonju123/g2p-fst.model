@@ -10,7 +10,7 @@ import logging
 import random
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     # Reads in data and shuffles.
     with open(args.input_path, "r") as source:
         data = [line.rstrip() for line in source]

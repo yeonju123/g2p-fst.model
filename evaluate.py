@@ -58,7 +58,7 @@ def _tsv_reader(path: str) -> Iterator[Tuple[str, str]]:
             yield (gold, hypo)
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     # Word-level measures.
     correct = 0
     incorrect = 0
