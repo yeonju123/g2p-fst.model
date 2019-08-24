@@ -21,7 +21,7 @@ predict_merge_eval (){
         python rewriter.py --word_path ${lang}_g_${1}.tsv --rule_path $model_name --token_type utf8 > predict.tsv       
 	python data_merge.py ${lang}_p_${1}.tsv predict.tsv eval.tsv
 	#evaluate word/label error rate
-        python evaluate.py eval.tsv >> ${lang}_result.txt #find a way to write down a log info
+        python evaluate.py eval.tsv >> ${lang}_result.txt
 }
 
 
@@ -34,6 +34,3 @@ for order in $orders; do
 		predict_merge_eval dev
 done
 done
-
-
-
