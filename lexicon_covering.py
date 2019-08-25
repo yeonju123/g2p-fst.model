@@ -5,11 +5,41 @@
 import argparse
 import functools
 import logging
+import json
 
 from typing import Set
 
 import pynini
 import pywrapfst
+
+
+def _type_reader(_type: str) -> pynini.SymbolTable or str:
+    """Allows for token_type from a SymbolTable text file
+    """
+    if _type not in ["byte", "utf8"]:
+        assert pynini.SymbolTable.read_text(
+            _type
+        ), "type must be 'byte', 'utf8' or SymbolTable"
+        _token_type = pynini.SymbolTable.read_text(_type)
+    else:
+        _token_type = _type
+    return _token_type
+
+
+def _text_processor(token: str) -> str:
+    """Returns processed text with added whitespace between characters
+    """
+    with open("combining.json", "r") as src:
+        combining = json.load(src)
+    chars = []
+    for char in token:
+        # Keep combining characters together
+        if char in combining:
+            m = chars.pop(-1)
+            chars.append(f"{m}{char}")
+        else:
+            chars.append(char)
+    return " ".join(chars)
 
 
 def _label_union(labels: Set[int], epsilon: bool) -> pynini.Fst:
@@ -38,7 +68,9 @@ def main(args: argparse.Namespace) -> None:
     p_labels: Set[int] = set()
     # Curries compiler and compactor functions for the FARs.
     compiler = functools.partial(
-        pynini.acceptor, token_type=args.token_type, attach_symbols=False
+        pynini.acceptor,
+        token_type=_type_reader(args.token_type),
+        attach_symbols=False,
     )
     compactor = functools.partial(pywrapfst.convert, fst_type="compact_string")
     logging.info("Constructing grapheme and phoneme FARs")
@@ -48,12 +80,18 @@ def main(args: argparse.Namespace) -> None:
         for (linenum, line) in enumerate(source, 1):
             key = f"{linenum:08x}"
             (g, p) = line.rstrip().split("\t", 1)
+            if args.token_type not in ["byte", "utf8"]:
+                _g = _text_processor(g)
+                _p = _text_processor(p)
+            else:
+                _g = g
+                _p = p
             # For both G and P, we compile a FSA, store the labels, and then
             # write the compact version to the FAR.
-            g_fst = compiler(g)
+            g_fst = compiler(_g)
             g_labels.update(g_fst.paths().ilabels())
             g_writer[key] = compactor(g_fst)
-            p_fst = compiler(p)
+            p_fst = compiler(_p)
             p_labels.update(p_fst.paths().ilabels())
             p_writer[key] = compactor(p_fst)
     logging.info("Processed %d examples", linenum)
