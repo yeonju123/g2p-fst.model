@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Build an end-to-end g2p pair language model"""
+"""Builds a end pair n-gram model language model."""
 
 import argparse
 import functools
@@ -98,9 +98,9 @@ class PairNGramTrainer:
 
     def _alignment(
         self
-    ):  # this method has to be changed after parallel aligner traning becmoes available.
+    ):  # This method has to be changed after parallel aligner traning
+        #  becomes available.
         logging.info("Baum-welch aligner training starts.")
-
         cmd = [
             "baumwelchtrain",
             self.g_far_path,
@@ -110,7 +110,6 @@ class PairNGramTrainer:
         ]
         subprocess.check_call(cmd)
         os.remove(self.covering_path)
-
         cmd = [
             "baumwelchdecode",
             self.g_far_path,
@@ -136,8 +135,7 @@ class PairNGramTrainer:
             encoder = pynini.EncodeMapper(
                 far_reader.arc_type(), encode_labels=True
             )
-
-            # encoding the alignments
+            # Encoding the alignments.
             with pynini.Far(
                 self.fsa_path,
                 mode="w",
@@ -252,7 +250,7 @@ if __name__ == "__main__":
         help="allows input phonemes to have a null alignment (default: %(default)s)",
     )
     parser.add_argument(
-        "--order", required=True, help="input the order of ngram"
+        "--order", default="6", help="input the order of ngram"
     )
     parser.add_argument(
         "--smoothing_method",

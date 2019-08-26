@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Evaluates sequence model using multiprocessing.
+"""Evaluates sequence model.
 
 This script assumes the gold and hypothesis data is stored in a two-column TSV
 file, one example per line."""
@@ -23,14 +23,11 @@ def _edit_distance(x: Labels, y: Labels) -> int:
     idim = len(x) + 1
     jdim = len(y) + 1
     table = numpy.zeros((idim, jdim), dtype=numpy.uint8)
-    for i in range(1, idim):
-        table[i][0] = 1
-    for j in range(1, jdim):
-        table[0][j] = 1
+    table[1:, 0] = 1
+    table[0, 1:] = 1
     for i in range(1, idim):
         for j in range(1, jdim):
             if x[i - 1] == y[j - 1]:
-                # Match operation.
                 table[i][j] = table[i - 1][j - 1]
             else:
                 c1 = table[i - 1][j]
@@ -46,7 +43,9 @@ def _score(gold: str, hypo: str) -> Tuple[int, int]:
     hypo_labels = list(hypo)
     edits = _edit_distance(gold_labels, hypo_labels)
     if edits:
-        logging.warning("Incorrect prediction: %s (predicted: %s)", gold, hypo)
+        logging.warning(
+            "Incorrect prediction:\t%s (predicted: %s)", gold, hypo
+        )
     return (edits, len(gold_labels))
 
 
@@ -81,7 +80,7 @@ def main(args: argparse.Namespace) -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("tsv_path", help="Path to gold/hypo TSV file")
+    logging.basicConfig(level="INFO", format="%(levelname)s: %(message)s")
+    parser = argparse.ArgumentParser(description="Evaluates sequence model")
+    parser.add_argument("tsv_path", help="path to gold/hypo TSV file")
     main(parser.parse_args())

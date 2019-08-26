@@ -38,22 +38,24 @@ def main(args: argparse.Namespace) -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(format="%(levelname)s: %(message)s", level="INFO")
+    logging.basicConfig(level="INFO", format="%(levelname)s: %(message)s")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--seed",
         type=int,
         required=True,
-        help="Random seed for shuffling data",
-    )
-    parser.add_argument("--input_path", required=True, help="Input data path")
-    parser.add_argument(
-        "--train_path", required=True, help="Output training data path"
+        help="random seed for shuffling data",
     )
     parser.add_argument(
-        "--dev_path", required=True, help="Output development data path"
+        "--input_path", required=True, help="path to input data"
     )
     parser.add_argument(
-        "--test_path", required=True, help="Output test data path"
+        "--train_path", required=True, help="path to output training data"
+    )
+    parser.add_argument(
+        "--dev_path", required=True, help="path to output development data"
+    )
+    parser.add_argument(
+        "--test_path", required=True, help="path to output test data"
     )
     main(parser.parse_args())
