@@ -3,7 +3,6 @@
 """Compiles a SymbolTable from TSV file."""
 
 import argparse
-import json
 import unicodedata
 
 from typing import List
@@ -60,14 +59,12 @@ def main(args: argparse.Namespace) -> None:
             syms.update(_char_processor(ortho))
             syms.update(_char_processor(phon))
 
-    sym = pynini.SymbolTable()
-    key = 0
-    sym.add_symbol(symbol="<eps>", key=key)
+    table = pynini.SymbolTable()
+    table.add_symbol(symbol="<epsilon>")
     for s in syms:
-        key += 1
-        sym.add_symbol(s, key)
+        table.add_symbol(s)
 
-    sym.write_text(args.output_sym)
+    table.write_text(args.output_sym)
 
 
 if __name__ == "__main__":
