@@ -7,6 +7,7 @@ import argparse
 import logging
 import multiprocessing
 
+from build_sym import _char_processor
 from typing import Iterator, Union
 
 import pynini
@@ -24,6 +25,8 @@ class _Rewriter:
     @classmethod
     def from_args(cls, fst_path: str, token_type: str):
         fst = pynini.Fst.read(fst_path)
+        if token_type not in ['byte', 'utf8']:
+            token_type = pynini.SymbolTable.read_text(token_type)
         return cls(fst, token_type)
 
     def rewrite(self, i: str) -> str:
@@ -36,17 +39,21 @@ class _Rewriter:
         )
 
 
-def _reader(path: str) -> Iterator[str]:
+def _reader(path: str, token_type: str) -> Iterator[str]:
     """Reads strings from a single-column filepath."""
     with open(path, "r") as source:
         for line in source:
-            yield line.rstrip()
+            token = line.rstrip()
+            if token_type not in ['byte', 'utf8']:
+                yield " ".join(_char_processor(token))
+            else:
+                yield token
 
 
 def main(args: argparse.Namespace) -> None:
     rewriter = _Rewriter.from_args(args.fst_path, args.token_type)
     with multiprocessing.Pool() as pool:
-        for line in pool.map(rewriter.rewrite, _reader(args.word_path)):
+        for line in pool.map(rewriter.rewrite, _reader(args.word_path, args.token_type)):
             print(line)
 
 
