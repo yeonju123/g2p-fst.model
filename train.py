@@ -8,23 +8,21 @@ import os
 import subprocess
 import tempfile
 
-from build_sym import _char_processor
 from typing import Set
 
+import build_sym
 import pynini
 import pywrapfst
 
 def _type_reader(_type: str) -> pynini.SymbolTable or str:
-    """Allows for token_type from a SymbolTable text file
-    """
-    if _type not in ["byte", "utf8"]:
-        _token_type = pynini.SymbolTable.read_text(_type)
+    """Allows for token_type from a SymbolTable text file."""
+    if _type not in {"byte", "utf8"}:
+        return pynini.SymbolTable.read_text(_type)
     else:
-        _token_type = _type
-    return _token_type
+        return _type
 
 class PairNGramTrainer:
-    """ Build a end-to-end g2p pair language model"""
+    """ Build a end-to-end g2p pair language model."""
 
     def __init__(self):
         self.g_far_path = tempfile.mkstemp(prefix="g.", suffix=".far")[1]
@@ -85,9 +83,9 @@ class PairNGramTrainer:
             for (linenum, line) in enumerate(source, 1):
                 key = f"{linenum:08x}"
                 (g, p) = line.rstrip().split("\t", 1)
-                if token_type not in ['byte', 'utf8']:
-                    g = " ".join(_char_processor(g))
-                    p = " ".join(_char_processor(p))
+                if token_type not in {"byte", "utf8"}:
+                    g = " ".join(build_sym._char_processor(g))
+                    p = " ".join(build_sym._char_processor(p))
                 # For both G and P, we compile a FSA, store the labels, and then
                 # write the compact version to the FAR.
                 g_fst = compiler(g)

@@ -11,9 +11,7 @@ import pynini
 
 
 def _char_processor(token: str) -> List[str]:
-
-    """Returns a list of characters with unseparated diacritics
-    """
+    """Returns a list of characters with unseparated diacritics."""
     MODS = frozenset(
         {
             "ˡ",

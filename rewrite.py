@@ -7,9 +7,9 @@ import argparse
 import logging
 import multiprocessing
 
-from build_sym import _char_processor
 from typing import Iterator, Union
 
+import build_sym
 import pynini
 
 
@@ -25,7 +25,7 @@ class _Rewriter:
     @classmethod
     def from_args(cls, fst_path: str, token_type: str):
         fst = pynini.Fst.read(fst_path)
-        if token_type not in ['byte', 'utf8']:
+        if token_type not in {"byte", "utf8"}:
             token_type = pynini.SymbolTable.read_text(token_type)
         return cls(fst, token_type)
 
@@ -44,8 +44,8 @@ def _reader(path: str, token_type: str) -> Iterator[str]:
     with open(path, "r") as source:
         for line in source:
             token = line.rstrip()
-            if token_type not in ['byte', 'utf8']:
-                yield " ".join(_char_processor(token))
+            if token_type not in {"byte", "utf8"}:
+                yield " ".join(build_sym._char_processor(token))
             else:
                 yield token
 
